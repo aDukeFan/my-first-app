@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 class StepTracker {
     Scanner scanner;
@@ -15,29 +15,50 @@ class StepTracker {
     void addNewNumbersStepsPerDay() {
         System.out.println("Введите номер месяца");
         int userMonth = scanner.nextInt();
+        while ((userMonth < 1) || (userMonth > 12)) {
+            System.out.println("Некорретный ввод, введите номер месяца");
+            userMonth = scanner.nextInt();
+        }
         System.out.println("Введите день от 1 до 30 (включительно)");
         int userDay = scanner.nextInt();
-        System.out.println("Введите количество шагов");
-        int userSteps = scanner.nextInt();
-        if ((userMonth > 0) && (userMonth < 13) && (userDay > 0) && (userDay < 31) && (userSteps > 0)) {
-            MonthData monthData = monthToData[userMonth - 1];
-            monthData.days[userDay - 1] = userSteps;
-            System.out.println("Изменения сохранены. В " + userMonth + "-ом месяце " + userDay + "-го числа Вы прошли: " + userSteps + " шагов.");
-        } else {
-            System.out.println("Некорретный ввод данных, попробуйте еще раз.");
+        while ((userDay < 1) || (userDay > 30)) {
+            System.out.println("Некорректный ввод, введите день от 1 до 30 (включительно)");
+            userDay = scanner.nextInt();
         }
+        System.out.println("Введите количество шагов, их должно быть больше нуля");
+        int userSteps = scanner.nextInt();
+        while (userSteps < 1) {
+            System.out.println("Некорректный ввод, введите количество шагов, их должно быть больше нуля");
+            userSteps = scanner.nextInt();
+        }
+        /*Воспользовался твоим советом String.format():
+        String text = String.format("Данные сохранены. %d числа %d месяца, Вы прошли %d шагов.", userDay, userMonth, userSteps);
+        System.out.println(text);
+        Но мне показалось, так еще проще:
+        System.out.printf("Данные сохранены. %d числа %d месяца, Вы прошли шагов: %d.\n", userDay, userMonth, userSteps);
+        а потом я решил добавить список с названиями месяцев: */
+        List<String> months = new ArrayList<>();
+        Collections.addAll(months, "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря");
+        System.out.printf("Данные сохранены. %d-го %s, Вы прошли, шагов: %d.\n", userDay, months.get(userMonth - 1), userSteps);
+        /* я бы еще добавил корректное количество дней в заданном месяце, но этого тоже в задании нет
+         и тебе, наверное, не составит большого удовольствия это проверять,
+         и вообще это приложение можно совершенствовать до бесконечности. */
+        MonthData monthData = monthToData[userMonth - 1];
+        monthData.days[userDay - 1] = userSteps;
     }
 
     int goalByStepsPerDay = 10000;
 
     void changeStepGoal() {
+        // Добавил отображение прежней цели пользователю, а то вдруг потеряется:
+        System.out.println("Прежняя цель составляла, шагов: " + goalByStepsPerDay);
         System.out.println("Введите желаемую цель (шагов в день)");
         int userTarget = scanner.nextInt();
         if (userTarget > 0) {
             goalByStepsPerDay = userTarget;
-            System.out.println("Цель изменена. Ваша новая цель: " + goalByStepsPerDay + " шагов в день.");
+            System.out.printf("Цель изменена. Ваша новая цель: %d шагов в день.\n", goalByStepsPerDay);
         } else {
-            System.out.println("Некорретный ввод данных, попробуйте еще раз.");
+            System.out.println("Некорретный ввод данных, осталась прежняя цель, попробуйте еще раз.");
         }
     }
 
@@ -46,19 +67,19 @@ class StepTracker {
         int userMonth = scanner.nextInt();
         if ((userMonth > 0) && (userMonth < 13)) {
             MonthData monthData = monthToData[userMonth - 1];
-            monthData.printDaysAndStepsFromMonth();// вывод общей статистики по дням
+            monthData.printDaysAndStepsFromMonth();
             int sumSteps = monthData.sumStepsFromMonth();
-            System.out.println("Сумма шагов за месяц: " + sumSteps);// вывод суммы шагов за месяц
             int maxSteps = monthData.maxSteps();
-            System.out.println("Максимальное количество пройденных шагов за месяц: " + maxSteps);// вывод максимального пройденного количества шагов за месяц
-            System.out.println("В среднем пройдено шагов за месяц: " + sumSteps / 30);// вывод среднего пройденного количества шагов за месяц
             int distance = converter.convertToKm(sumSteps);
-            System.out.println("Пройденная дистанция за месяц, км: " + distance);// вывод пройденной за месяц дистанции в км
             int kcal = converter.convertStepsToKilocalories(sumSteps);
-            System.out.println("Количество сожженых килокалорий за месяц: " + kcal);// вывод количества сожжённых килокалорий за месяц
             int bestSeries = monthData.bestSeries(goalByStepsPerDay);
-            System.out.println("Лучшая серия шагов, дней: " + bestSeries);// вывод лучшей серии
-            System.out.println(); //дополнительный перенос строки
+            // Здесь было слишком много print-ов, я изменил, и переносы в коде сделал для более удобной читаемости:
+            System.out.printf("Cумма шагов за месяц: %d\n" +
+                    "Дистанция в этот месяц составила: %d км\n" +
+                    "Максимальное количество пройденных шагов в день: %d\n" +
+                    "В среднем пройденно шагов: %d\n" +
+                    "Вам удалось сжечь: %d ккал\n" +
+                    "Лучшая серия шагов, дней: %d\n\n", sumSteps, distance, maxSteps, sumSteps / 30, kcal, bestSeries);
         } else {
             System.out.println("Некорретный ввод данных, попробуйте еще раз.");
         }
