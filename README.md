@@ -1,2 +1,3 @@
-# java-sprint1-hw
-First sprint homework
+# StepTracker
+## My first Java trying
+### simple console application written in Java 11

@@ -1,34 +1,39 @@
 import java.util.Scanner;
 
-class Main {
+public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        StepTracker Steptracker = new StepTracker(scanner);
-
+        StepTracker tracker = new StepTracker(scanner);
+        System.out.println("Welcome to StepTracker!");
         while (true) {
             printMenu();
             int point = scanner.nextInt();
-            if (point == 1) {
-                Steptracker.addNewNumbersStepsPerDay();
-            } else if (point == 2) {
-                Steptracker.changeStepGoal();
-            } else if (point == 3) {
-                Steptracker.printStatistic();
-            } else if (point == 4) {
-                System.out.println("Всего хорошего!");
-                scanner.close();
-                return;
-            } else {
-                System.out.println("Такой команды нет");
+            switch (point) {
+                case 1:
+                    tracker.addNewNumbersStepsPerDay();
+                    break;
+                case 2:
+                    tracker.changeStepGoal();
+                    break;
+                case 3:
+                    tracker.printStatistic();
+                    break;
+                case 4:
+                    System.out.println("Have a nice day!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Oopse! There is no such point =(");
             }
         }
     }
 
-    static void printMenu() {
-        System.out.println("Чего изволите?");
-        System.out.println("1 - ввести количество шагов за определённый день");
-        System.out.println("2 - изменить цель по количеству шагов в день");
-        System.out.println("3 - напечатать статистику за определённый месяц");
-        System.out.println("4 - выйти из приложения");
+    private static void printMenu() {
+        System.out.println("--------------------\n " +
+                "1 - enter the number of steps for a certain day\n " +
+                "2 - change your daily steps goal\n " +
+                "3 - get statistics for certain month\n " +
+                "4 - Close the app\n" +
+                "--------------------");
     }
 }

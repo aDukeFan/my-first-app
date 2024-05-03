@@ -1,9 +1,9 @@
-class Converter {
-    int convertToKm(int steps) {
+public class Converter {
+    public int convertToKm(int steps) {
         return steps * 75 / 100000;
     }
 
-    int convertStepsToKilocalories(int steps) {
+    public int convertStepsToKilocalories(int steps) {
         return steps * 50 / 1000;
     }
 }
