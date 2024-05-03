@@ -23,7 +23,7 @@ public class Main {
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Oopse! There is no such point =(");
+                    System.out.println("Oops! There is no such point =(");
             }
         }
     }
